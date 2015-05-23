@@ -6,8 +6,9 @@ namespace config
 	const float window_height = 600.0f;
 	const float window_width = 1200.0f;
 
-	const float cube_radius = 20.0f;//¡˘±ﬂ–Œ∞Îæ∂
-	
+    // 地图
+    const float cube_y = 1813.f /(80 * 2 +1 );
+	const float cube_x = 1645.0f / (2 + 1.5f*79);// 六边形半径
 
 	// ¥ÛµÿÕºUI≤Œ ˝
 	const float map_space_height = 600.0f;
@@ -53,6 +54,11 @@ namespace config
     const float btn_y_2 = btn_y_1 - btn_y_strip;
     const float btn_y_3 = btn_y_2 - btn_y_strip;
 
+    // 规则属性
+    const int init_move_point = 5;
+
+    // tank
+    const float tanke_scale = 0.2f;
 }
 
 #endif

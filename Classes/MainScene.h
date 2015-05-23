@@ -19,9 +19,6 @@ public:
     // implement the "static create()" method manually
 	CREATE_FUNC(MainScene);
 
-    void go(){
-
-    }
 private:
     enum {
         TAG_CHECK,
@@ -29,6 +26,9 @@ private:
         TAG_ATTACK,
         TAG_END
     };
+
+    cocos2d::Layer* _battleLayer;
+
     cocos2d::Sprite* _smallMap; // 小地图
     cocos2d::Sprite* _mainMap; // 大地图
     cocos2d::Sprite* _select; // 选择框

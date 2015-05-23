@@ -1,5 +1,6 @@
 #include "MainScene.h"
 #include "Common.h"
+#include "Battle.h"
 
 USING_NS_CC;
 
@@ -11,7 +12,7 @@ Scene* MainScene::createScene()
     // 'layer' is an autorelease object
     auto layer = MainScene::create();
 
-    // add layer as a child to scene
+    scene->addChild(layer->_battleLayer);
     scene->addChild(layer);
 
     // return the scene
@@ -68,6 +69,7 @@ bool MainScene::init()
     Size visibleSize = Director::getInstance()->getVisibleSize();
     Vec2 origin = Director::getInstance()->getVisibleOrigin();
 
+
     // 状态区
     auto status = Sprite::create("status.png");
     status->setPosition({config::status_x, config::status_y});
@@ -110,10 +112,18 @@ bool MainScene::init()
     decorateFunctionButton("btn_attack.png", "btn_attack_p.png", config::btn_x, config::btn_y_2, TAG_ATTACK);
     decorateFunctionButton("btn_end.png", "btn_end_p.png", config::btn_x, config::btn_y_3, TAG_END);
 
+
+    _battleLayer = Layer::create();
+    auto battle = Battle::getInstance();
+    battle->init(_battleLayer);
+
 	// 大地图
 	_mainMap = Sprite::create("map.jpg");
-    _mainMap->setPosition({ config::map_space_width *0.5f, config::map_space_height*0.5f });
-    this->addChild(_mainMap, 0);
+    _mainMap->setAnchorPoint({0,0});
+    _mainMap->setPosition({0,0});
+    _battleLayer->addChild(_mainMap, 0);
+
+    _battleLayer->setPosition(Vec2{ config::map_space_width *0.5f, config::map_space_height*0.5f } - 0.5f * _mainMap->getContentSize());
 
     // 小背景
     auto bg = Sprite::create("setting_bg.png");
@@ -167,20 +177,24 @@ bool MainScene::init()
             // 移动大地图
             auto& csize = this->_mainMap->getContentSize();
             auto move = MoveTo::create(config::bigmap_move_time,
-                                       {
+                                       Vec2{
                                            0.5f*csize.width - rx/ config::minimap_width * csize.width + 0.5f * config::map_space_width,
                                            0.5f*csize.height - ry/ config::minimap_height * csize.height + 0.5f * config::map_space_height,
-                                       });
-            _mainMap->stopAllActions();
-            _mainMap->runAction(move);
-//            _mainMap->setAnchorPoint({ rx / config::minimap_width, ry / config::minimap_height});
+                                       } - 0.5f * _mainMap->getContentSize());
+            _battleLayer->stopAllActions();
+            _battleLayer->runAction(move);
         }
     };
     _eventDispatcher->addEventListenerWithSceneGraphPriority(smallMap_listener, _smallMap);
 
-    // 状态栏
+    for (int i = 0; i < 15; i++) {
 
+        battle->insertTank({2, i}, Tank::T_RED);
+    }
+    for (int i = 0; i < 15; i++) {
 
+        battle->insertTank({i, 2}, Tank::T_RED);
+    }
     return true;
 }
 
