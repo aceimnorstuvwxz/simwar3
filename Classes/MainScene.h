@@ -3,6 +3,7 @@
 
 #include "cocos2d.h"
 
+#include "ui/CocosGUI.h"
 class MainScene : public cocos2d::Layer
 {
 public:
@@ -22,9 +23,25 @@ public:
 
     }
 private:
+    enum {
+        TAG_CHECK,
+        TAG_MOVE,
+        TAG_ATTACK,
+        TAG_END
+    };
     cocos2d::Sprite* _smallMap; // 小地图
     cocos2d::Sprite* _mainMap; // 大地图
     cocos2d::Sprite* _select; // 选择框
+
+    cocos2d::Sprite* _lb0; //机动值
+    cocos2d::Sprite* _lb1; //是否机动
+    cocos2d::Sprite* _lb2; //是否射击
+    cocos2d::Sprite* _lb3; //是否被射击
+    cocos2d::Sprite* _lb4; //当前状态
+
+    void decorateFunctionButton(const std::string& img0, const std::string& img1,  float x, float y, int tag);
+    void touchEvent(Ref *pSender, cocos2d::ui::Widget::TouchEventType type);
+
 };
 
 #endif // __HELLOWORLD_SCENE_H__

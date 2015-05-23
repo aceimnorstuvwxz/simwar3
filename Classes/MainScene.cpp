@@ -18,6 +18,43 @@ Scene* MainScene::createScene()
     return scene;
 }
 
+void MainScene::decorateFunctionButton(const std::string& img0, const std::string& img1,  float x, float y, int tag)
+{
+    auto button = ui::Button::create(img0, img1);
+    button->setPressedActionEnabled(true);
+    button->setAnchorPoint({0,0});
+    button->setPosition({x,y});
+    button->setTag(tag);
+    button->addTouchEventListener(CC_CALLBACK_2(MainScene::touchEvent, this));
+    button->setScale(config::btn_scale);
+    this->addChild(button, 11);
+}
+
+void MainScene::touchEvent(Ref *pSender, cocos2d::ui::Widget::TouchEventType type){
+    auto button = static_cast<cocos2d::ui::Button*>(pSender);
+    int tag = button->getTag();
+    if (type != cocos2d::ui::Widget::TouchEventType::ENDED) {
+        return;
+    }
+    switch (tag) {
+        case TAG_CHECK:
+            CCLOG("btn check");
+            break;
+        case TAG_MOVE:
+            CCLOG("btn move");
+            break;
+        case TAG_ATTACK:
+            CCLOG("btn attack");
+            break;
+        case TAG_END:
+            CCLOG("btn end");
+            break;
+        default:
+            break;
+    }
+}
+
+
 // on "init" you need to initialize your instance
 bool MainScene::init()
 {
@@ -31,63 +68,62 @@ bool MainScene::init()
     Size visibleSize = Director::getInstance()->getVisibleSize();
     Vec2 origin = Director::getInstance()->getVisibleOrigin();
 
-    /////////////////////////////
-    // 2. add a menu item with "X" image, which is clicked to quit the program
-    //    you may modify it.
+    // çŠ¶æ€åŒº
+    auto status = Sprite::create("status.png");
+    status->setPosition({config::status_x, config::status_y});
+    status->setScale(config::status_scale);
+    this->addChild(status, 10);
 
-    // add a "close" icon to exit the progress. it's an autorelease object
-    auto closeItem = MenuItemImage::create(
-                                           "CloseNormal.png",
-                                           "CloseSelected.png",
-                                           CC_CALLBACK_1(MainScene::menuCloseCallback, this));
-    
-	closeItem->setPosition(Vec2(origin.x + visibleSize.width - closeItem->getContentSize().width/2 ,
-                                origin.y + closeItem->getContentSize().height/2));
+    auto l0 = Sprite::create("l0.png");
+    l0->setAnchorPoint({0,0});
+    l0->setScale(config::status_scale);
+    l0->setPosition({config::status_l_x, config::status_y_0, });
+    this->addChild(l0, 10);
 
-    // create menu, it's an autorelease object
-    auto menu = Menu::create(closeItem, NULL);
-    menu->setPosition(Vec2::ZERO);
-    this->addChild(menu, 1);
+    auto l1 = Sprite::create("l1.png");
+    l1->setAnchorPoint({0,0});
+    l1->setScale(config::status_scale);
+    l1->setPosition({config::status_l_x, config::status_y_1, });
+    this->addChild(l1, 10);
 
-    /////////////////////////////
-    // 3. add your codes below...
+    auto l2 = Sprite::create("l2.png");
+    l2->setAnchorPoint({0,0});
+    l2->setScale(config::status_scale);
+    l2->setPosition({config::status_l_x, config::status_y_2, });
+    this->addChild(l2, 10);
 
-    // add a label shows "Hello World"
-    // create and initialize a label
-    
-    auto label = Label::createWithTTF("Hello World", "fonts/Marker Felt.ttf", 24);
-    
-    // position the label on the center of the screen
-    label->setPosition(Vec2(origin.x + visibleSize.width/2,
-                            origin.y + visibleSize.height - label->getContentSize().height));
+    auto l3 = Sprite::create("l3.png");
+    l3->setAnchorPoint({0,0});
+    l3->setScale(config::status_scale);
+    l3->setPosition({config::status_l_x, config::status_y_3, });
+    this->addChild(l3, 10);
 
-    // add the label as a child to this layer
-    this->addChild(label, 1);
+    auto l4 = Sprite::create("l4.png");
+    l4->setAnchorPoint({0,0});
+    l4->setScale(config::status_scale);
+    l4->setPosition({config::status_l_x, config::status_y_4, });
+    this->addChild(l4, 10);
 
-    // add "HelloWorld" splash screen"
-    auto sprite = Sprite::create("HelloWorld.png");
+    // åŠŸèƒ½åŒº
+    decorateFunctionButton("btn_check.png", "btn_check_p.png", config::btn_x, config::btn_y_0, TAG_CHECK);
+    decorateFunctionButton("btn_move.png", "btn_move_p.png", config::btn_x, config::btn_y_1, TAG_MOVE);
+    decorateFunctionButton("btn_attack.png", "btn_attack_p.png", config::btn_x, config::btn_y_2, TAG_ATTACK);
+    decorateFunctionButton("btn_end.png", "btn_end_p.png", config::btn_x, config::btn_y_3, TAG_END);
 
-    // position the sprite on the center of the screen
-    sprite->setPosition(Vec2(visibleSize.width/2 + origin.x, visibleSize.height/2 + origin.y));
-
-    // add the sprite as a child to this layer
-    this->addChild(sprite, 0);
-
-	// ´óµØÍ¼
+	// å¤§åœ°å›¾
 	_mainMap = Sprite::create("map.jpg");
-    _mainMap->setAnchorPoint({ 0, 0 });
-    _mainMap->setPosition({ 0, 1 });
+    _mainMap->setPosition({ config::map_space_width *0.5f, config::map_space_height*0.5f });
     this->addChild(_mainMap, 0);
 
-    // ÉèÖÃÇøÓòµÄ±³¾°
-    auto bg = Sprite::create("bg2.jpg");
+    // å°èƒŒæ™¯
+    auto bg = Sprite::create("setting_bg.png");
     bg->setAnchorPoint({0,0}); 
     bg->setScaleX(config::setting_area_w / bg->getContentSize().width);
     bg->setScaleY(config::setting_area_h / bg->getContentSize().height);
     bg->setPosition(config::setting_area_x, config::setting_area_y);
     this->addChild(bg, 1);
 
-	// Ğ¡µØÍ¼
+	// å°åœ°å›¾
 	_smallMap = Sprite::create("map.jpg");
 	_smallMap->setAnchorPoint({ 0, 0 });
     _smallMap->setScaleX(config::minimap_width / _smallMap->getContentSize().width);
@@ -95,7 +131,7 @@ bool MainScene::init()
 	_smallMap->setPosition({ config::minimap_x, config::minimap_y });
 	this->addChild(_smallMap, 2);
 
-    // Ğ¡µØÍ¼Ñ¡Ôñ¿ò
+    // å°åœ°å›¾å†…çš„é€‰æ‹©æ¡†
     _select = Sprite::create("select.png");
     float scale_x = config::map_space_width * 1.f / _mainMap->getContentSize().width * config::minimap_width / _select->getContentSize().width;
     _select->setScaleX(scale_x);
@@ -104,13 +140,45 @@ bool MainScene::init()
     _select->setPosition(config::minimap_x + 0.5f*config::minimap_width, config::minimap_y + 0.5f * config::minimap_height);
     this->addChild(_select, 3);
 
-    // Ğ¡µØÍ¼ÊÂ¼ş´¦Àí
+    // é€‰æ‹©æ¡†ç§»åŠ¨å“åº”
     auto smallMap_listener = EventListenerMouse::create();
     smallMap_listener->onMouseDown = [this](Event * event){
         EventMouse* e = reinterpret_cast<EventMouse*>(event);
-        this->_select->setPosition(e->getCursorX(), e->getCursorY());
+        float x = e->getCursorX();
+        float y = config::window_height + e->getCursorY();
+        CCLOG("smallMap_listener %f %f", x, y);
+        if (x >= config::minimap_x && x <= config::minimap_x + config::minimap_width &&
+            y >= 0 && y <= config::minimap_y + config::minimap_height) {
+
+            // ç§»åŠ¨é€‰æ‹©æ¡†
+            float rx = x - config::minimap_x;
+            float ry = y - config::minimap_y;
+            CCLOG("smallMap_listener relative %f %f", rx, ry);
+
+            float half_w = this->_select->getScaleX() * this->_select->getContentSize().width * 0.5f;
+            float half_h = this->_select->getScaleY() * this->_select->getContentSize().height * 0.5f;
+            if (rx < half_w) rx = half_w;
+            if (config::minimap_width - rx  < half_w) rx = config::minimap_width - half_w;
+            if (ry < half_h) ry = half_h;
+            if (config::minimap_height - ry < half_h) ry = config::minimap_height - half_h;
+
+            this->_select->setPosition(config::minimap_x + rx, config::minimap_y + ry);
+
+            // ç§»åŠ¨å¤§åœ°å›¾
+            auto& csize = this->_mainMap->getContentSize();
+            auto move = MoveTo::create(config::bigmap_move_time,
+                                       {
+                                           0.5f*csize.width - rx/ config::minimap_width * csize.width + 0.5f * config::map_space_width,
+                                           0.5f*csize.height - ry/ config::minimap_height * csize.height + 0.5f * config::map_space_height,
+                                       });
+            _mainMap->stopAllActions();
+            _mainMap->runAction(move);
+//            _mainMap->setAnchorPoint({ rx / config::minimap_width, ry / config::minimap_height});
+        }
     };
-    _eventDispatcher->addEventListenerWithSceneGraphPriority(listener, _smallMap);
+    _eventDispatcher->addEventListenerWithSceneGraphPriority(smallMap_listener, _smallMap);
+
+    // çŠ¶æ€æ 
 
 
     return true;
