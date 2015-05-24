@@ -30,6 +30,7 @@ namespace config
 
     // time
     const float bigmap_move_time = 0.3f;
+    const float tank_move_time = 0.1f;
 
     // 状态烂
     const float status_scale = 0.3;
@@ -60,6 +61,9 @@ namespace config
 
     // tank
     const float tanke_scale = 0.2f;
+
+    // 杂
+    const float target_scale = 0.5f;
 }
 typedef
 struct _cord

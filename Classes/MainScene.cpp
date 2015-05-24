@@ -86,6 +86,10 @@ bool MainScene::init()
     // add the label as a child to this layer
     this->addChild(label, 100);
 
+    auto label2 = Label::createWithTTF("", "fonts/myfont.ttf", 20);
+    label2->setPosition({config::status_x + 100, config::status_y_0});
+    this->addChild(label2, 100);
+
 
     // 状态区
     auto status = Sprite::create("status.png");
@@ -133,7 +137,7 @@ bool MainScene::init()
 
     _battleLayer = Layer::create();
     auto battle = Battle::getInstance();
-    battle->init(_battleLayer, label);
+    battle->init(_battleLayer, label, label2);
 
 	// 大地图
 	_mainMap = Sprite::create("map.jpg");

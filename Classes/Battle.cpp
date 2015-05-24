@@ -113,6 +113,7 @@ void Battle::onClick(float x, float y)
             if (getTank(cord) == nullptr) {
                 // 只能设置在空的地方
                 redTarget = cord;
+                setRedTarget();
                 gameState = SET_BLUE_TARGET;
                 message("请设置蓝军攻占目标。");
             }
@@ -120,33 +121,15 @@ void Battle::onClick(float x, float y)
         case SET_BLUE_TARGET:
             if(getTank(cord) == nullptr && !(cord == redTarget)){
                 blueTarget = cord;
+                setBlueTarget();
                 gameState = WAIT_ATTACK_CHECK;
                 message("战争开始。进入机动阶段，请确定先手。");
             }
             break;
-//        case MOVING:
-//            if (isSelected) {
-//                // move selected tank to cord
-//                if (getTank(cord) == nullptr) {
-//                    // ok to move
-//                    auto tank = getTank(selectedCord);
-//                    if (pathIsPass(selectedCord, cord) && pathCost(selectedCord, cord) <= tank->move_points) {
-//                        tank->cord = cord;
-//                        tank->move_points -= pathCost(selectedCord, cord);
-//                        tank->sprite->setPosition(cord2pos(cord));
-//                    }
-//                } else {
-//                    // judge 裁决
-//
-//                }
-//                isSelected = false;
-//            } else {
-//                if (getTank(cord) != nullptr) {
-//                    isSelected = true;
-//                    selectedCord = cord;
-//                }
-//            }
-//            break;
+        case FIRST_MOVING:
+            dealMove(cord);
+            break;
+
 //        case ATTACK:
 //            if (isAttackSelected) {
 //
