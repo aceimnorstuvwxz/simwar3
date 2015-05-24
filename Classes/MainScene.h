@@ -24,7 +24,8 @@ private:
         TAG_CHECK,
         TAG_MOVE,
         TAG_ATTACK,
-        TAG_END
+        TAG_END,
+        TAG_RESET
     };
 
     cocos2d::Layer* _battleLayer;

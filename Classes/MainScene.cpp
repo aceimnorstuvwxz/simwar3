@@ -40,15 +40,23 @@ void MainScene::touchEvent(Ref *pSender, cocos2d::ui::Widget::TouchEventType typ
     switch (tag) {
         case TAG_CHECK:
             CCLOG("btn check");
+            Battle::getInstance()->check();
             break;
         case TAG_MOVE:
             CCLOG("btn move");
+            Battle::getInstance()->move();
             break;
         case TAG_ATTACK:
             CCLOG("btn attack");
+            Battle::getInstance()->attack();
             break;
         case TAG_END:
             CCLOG("btn end");
+            Battle::getInstance()->end();
+            break;
+        case TAG_RESET:
+            Battle::getInstance()->reset();
+            CCLOG("reset");
             break;
         default:
             break;
@@ -68,6 +76,15 @@ bool MainScene::init()
     
     Size visibleSize = Director::getInstance()->getVisibleSize();
     Vec2 origin = Director::getInstance()->getVisibleOrigin();
+
+    // 消息
+    auto label = Label::createWithTTF("", "fonts/Marker Felt.ttf", 24);
+
+    // position the label on the center of the screen
+    label->setPosition({config::map_space_width / 2, config::window_height - 50});
+
+    // add the label as a child to this layer
+    this->addChild(label, 100);
 
 
     // 状态区
@@ -111,11 +128,12 @@ bool MainScene::init()
     decorateFunctionButton("btn_move.png", "btn_move_p.png", config::btn_x, config::btn_y_1, TAG_MOVE);
     decorateFunctionButton("btn_attack.png", "btn_attack_p.png", config::btn_x, config::btn_y_2, TAG_ATTACK);
     decorateFunctionButton("btn_end.png", "btn_end_p.png", config::btn_x, config::btn_y_3, TAG_END);
+    decorateFunctionButton("btn_reset.png", "btn_reset_p.png", config::btn_x, config::btn_y_m1, TAG_RESET);
 
 
     _battleLayer = Layer::create();
     auto battle = Battle::getInstance();
-    battle->init(_battleLayer);
+    battle->init(_battleLayer, label);
 
 	// 大地图
 	_mainMap = Sprite::create("map.jpg");
@@ -183,6 +201,12 @@ bool MainScene::init()
                                        } - 0.5f * _mainMap->getContentSize());
             _battleLayer->stopAllActions();
             _battleLayer->runAction(move);
+        }
+
+        if (x >= 0 && x <= config::map_space_width && y >=0 && y <=config::map_space_height) {
+            // 大地图上的点击
+            auto& pos = this->_battleLayer->getPosition();
+            Battle::getInstance()->onClick(x - pos.x,y-pos.y);
         }
     };
     _eventDispatcher->addEventListenerWithSceneGraphPriority(smallMap_listener, _smallMap);

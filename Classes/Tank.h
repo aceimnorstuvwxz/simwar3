@@ -21,6 +21,7 @@ public:
     typedef enum {
         ST_ALIVE, //正常模式
         ST_FIRE, //失火了
+        ST_NOMOVE, //失去动力
         ST_DEAD, //已被灭
     } STATE;
 
@@ -31,36 +32,31 @@ public:
 
     STATE state = ST_ALIVE;
     TEAM team = T_RED;
+    bool hasMoved = false;
+    bool hasFired = false;
     std::string name;
-    int pos_x = 0;
-    int pos_y = 0;
+    Cord cord = {0,0};
     int move_points = config::init_move_point;//本回合剩余机动点数
     cocos2d::Sprite* sprite;
 
     int distance(int x, int y){
-        return sqrt((pos_x - x)*(pos_x - x) + (pos_y - y)*(pos_y - y));
+        return sqrt((cord.x - x)*(cord.x - x) + (cord.y - y)*(cord.y - y));
     }
 
-    bool moveTo(int x, int y){
-        assert(x >= 0);
-        assert(y >= 0);
-        auto dis = distance(x, y);
-        if (dis > move_points) {
-            CCLOG("too far, move failed.");
-            return false;
-        }
+    bool canFire(){
+        return hasFired == false && (state == ST_ALIVE || state == ST_NOMOVE);
+    }
 
-        pos_x = x;
-        pos_y = y;
-        move_points -= dis;
-        CCLOG("%s move to %d, %d", name.c_str(), pos_x, pos_y);
-        return true;
+    bool canMove(){
+        return hasMoved == false && (state == ST_ALIVE || state == ST_FIRE);
     }
 
     void nextCycle(){
         // 进入下一个回合，更新相关状态
         move_points = config::init_move_point;
+        hasFired = hasMoved = false;
     }
+
 
 };
 

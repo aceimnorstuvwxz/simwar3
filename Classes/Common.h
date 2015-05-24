@@ -46,10 +46,11 @@ namespace config
 
     // 按键
     const float btn_x = setting_area_x + 20;
-    const float btn_y_start  = status_y_5 - 30;
-    const float btn_y_strip = 45;
-    const float btn_scale = 0.35f;
-    const float btn_y_0 = btn_y_start - btn_y_strip * 0;
+    const float btn_y_start  = status_y_5 - 20;
+    const float btn_y_strip = 38;
+    const float btn_scale = 0.29f;
+    const float btn_y_m1 = btn_y_start - btn_y_strip * 0;
+    const float btn_y_0 = btn_y_m1  - btn_y_strip;
     const float btn_y_1 = btn_y_0 - btn_y_strip;
     const float btn_y_2 = btn_y_1 - btn_y_strip;
     const float btn_y_3 = btn_y_2 - btn_y_strip;
@@ -60,5 +61,13 @@ namespace config
     // tank
     const float tanke_scale = 0.2f;
 }
-
+typedef
+struct _cord
+{
+    int x,y;
+    _cord(int xx, int yy):x(xx), y(yy){};
+    bool operator==(const struct _cord& right){
+        return x == right.x && y == right.y;
+    }
+} Cord;
 #endif
