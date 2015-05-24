@@ -70,10 +70,22 @@ void Battle::onClick(float x, float y)
      INIT,
      ADDING_RED,
      ADDING_BLUE,
-     WAIT_CHECK,
-     WAIT_MOVE,
-     MOVING,
-     ATTACK,
+     SET_RED_TARGET,
+     SET_BLUE_TARGET,
+     WAIT_MOVING_CHECK,
+     WAIT_FIRST_MOVING_CLICK,
+     FIRST_MOVING,
+     FIRST_MOVED,
+     SECOND_MOVING_ATTACKING,
+     WAIT_SECOND_MOVING_CLICK,
+     SECOND_MOVING,
+     SECOND_MOVED,
+     FIRST_MOVING_ATTACKING,
+     WAIT_ATTACK_CHECK,
+     WAIT_FIRST_ATTACK_CLICK,
+     FIRST_ATTACKING,
+     WAIT_SECOND_ATTACK_CLICK,
+     SECOND_ATTACKING,
      RED_WIN,
      BLUE_WIN
      */
@@ -84,7 +96,7 @@ void Battle::onClick(float x, float y)
                 insertTank(cord, Tank::T_RED);
                 if (redTeam.size() >= 10) {
                     gameState = ADDING_BLUE;
-                    message("please add blue tanks");
+                    message("接下来请放置10辆蓝军坦克。");
                 }
             }
             break;
@@ -92,45 +104,60 @@ void Battle::onClick(float x, float y)
             if (getTank(cord) == nullptr) {
                 insertTank(cord, Tank::T_BLUE);
                 if (blueTeam.size() >= 10) {
-                    gameState = WAIT_CHECK;
-                    message("wait for check");
+                    gameState = SET_RED_TARGET;
+                    message("请设置红军攻占目标。");
                 }
             }
             break;
-        case MOVING:
-            if (isSelected) {
-                // move selected tank to cord
-                if (getTank(cord) == nullptr) {
-                    // ok to move
-                    auto tank = getTank(selectedCord);
-                    if (pathIsPass(selectedCord, cord) && pathCost(selectedCord, cord) <= tank->move_points) {
-                        tank->cord = cord;
-                        tank->move_points -= pathCost(selectedCord, cord);
-                        tank->sprite->setPosition(cord2pos(cord));
-                    }
-                } else {
-                    // judge 裁决
-
-                }
-                isSelected = false;
-            } else {
-                if (getTank(cord) != nullptr) {
-                    isSelected = true;
-                    selectedCord = cord;
-                }
+        case SET_RED_TARGET:
+            if (getTank(cord) == nullptr) {
+                // 只能设置在空的地方
+                redTarget = cord;
+                gameState = SET_BLUE_TARGET;
+                message("请设置蓝军攻占目标。");
             }
             break;
-        case ATTACK:
-            if (isAttackSelected) {
-
-                auto tankFrom = getTank(attackSelectedCord);
-                auto tankTo = getTank(cord);
-                if (tankTo == nullptr) {
-                    // nothing
-                } else {
-                }
-                isAttackSelected = false;
+        case SET_BLUE_TARGET:
+            if(getTank(cord) == nullptr && !(cord == redTarget)){
+                blueTarget = cord;
+                gameState = WAIT_ATTACK_CHECK;
+                message("战争开始。进入机动阶段，请确定先手。");
             }
+            break;
+//        case MOVING:
+//            if (isSelected) {
+//                // move selected tank to cord
+//                if (getTank(cord) == nullptr) {
+//                    // ok to move
+//                    auto tank = getTank(selectedCord);
+//                    if (pathIsPass(selectedCord, cord) && pathCost(selectedCord, cord) <= tank->move_points) {
+//                        tank->cord = cord;
+//                        tank->move_points -= pathCost(selectedCord, cord);
+//                        tank->sprite->setPosition(cord2pos(cord));
+//                    }
+//                } else {
+//                    // judge 裁决
+//
+//                }
+//                isSelected = false;
+//            } else {
+//                if (getTank(cord) != nullptr) {
+//                    isSelected = true;
+//                    selectedCord = cord;
+//                }
+//            }
+//            break;
+//        case ATTACK:
+//            if (isAttackSelected) {
+//
+//                auto tankFrom = getTank(attackSelectedCord);
+//                auto tankTo = getTank(cord);
+//                if (tankTo == nullptr) {
+//                    // nothing
+//                } else {
+//                }
+//                isAttackSelected = false;
+//            }
 
         default:
             break;

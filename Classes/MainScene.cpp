@@ -78,7 +78,7 @@ bool MainScene::init()
     Vec2 origin = Director::getInstance()->getVisibleOrigin();
 
     // 消息
-    auto label = Label::createWithTTF("", "fonts/Marker Felt.ttf", 24);
+    auto label = Label::createWithTTF("按'开局'开始新一局游戏。", "fonts/myfont.ttf", 24);
 
     // position the label on the center of the screen
     label->setPosition({config::map_space_width / 2, config::window_height - 50});
@@ -211,14 +211,6 @@ bool MainScene::init()
     };
     _eventDispatcher->addEventListenerWithSceneGraphPriority(smallMap_listener, _smallMap);
 
-    for (int i = 0; i < 15; i++) {
-
-        battle->insertTank({2, i}, Tank::T_RED);
-    }
-    for (int i = 0; i < 15; i++) {
-
-        battle->insertTank({i, 2}, Tank::T_RED);
-    }
     return true;
 }
 

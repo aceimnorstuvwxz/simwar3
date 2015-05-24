@@ -30,10 +30,22 @@ public:
         INIT,
         ADDING_RED,
         ADDING_BLUE,
-        WAIT_CHECK,
-        WAIT_MOVE,
-        MOVING,
-        ATTACK,
+        SET_RED_TARGET,
+        SET_BLUE_TARGET,
+        WAIT_MOVING_CHECK,
+        WAIT_FIRST_MOVING_CLICK,
+        FIRST_MOVING,
+        FIRST_MOVED,
+        SECOND_MOVING_ATTACKING,
+        WAIT_SECOND_MOVING_CLICK,
+        SECOND_MOVING,
+        SECOND_MOVED,
+        FIRST_MOVING_ATTACKING,
+        WAIT_ATTACK_CHECK,
+        WAIT_FIRST_ATTACK_CLICK,
+        FIRST_ATTACKING,
+        WAIT_SECOND_ATTACK_CLICK,
+        SECOND_ATTACKING,
         RED_WIN,
         BLUE_WIN
     } GAME_STATE;
@@ -63,6 +75,7 @@ public:
     }
 
     void reset(){
+        message("新的战争开始了，请先放置10辆红军坦克。");
         for (auto tank: blueTeam) {
             _layer->removeChild(tank->sprite);
         }
@@ -72,13 +85,12 @@ public:
         redTeam.clear();
         blueTeam.clear();
         gameState = ADDING_RED;
-        message("click to add RED tank 0/10");
-        gameState = ADDING_RED;
     }
 
     void check(){
         std::time_t t;
         std::ctime(&t);
+        CCLOG("%ld", t);
         std::srand(t);
         if (std::rand()%2 == 0 ){
             message("red first");
@@ -87,21 +99,30 @@ public:
             message("blue first");
             isRedFirst = false;
         }
-        gameState = WAIT_MOVE;
+        switch (gameState) {
+            case WAIT_MOVING_CHECK:
+                gameState =WAIT_FIRST_MOVING_CLICK;
+                break;
+            case WAIT_ATTACK_CHECK:
+                gameState = WAIT_FIRST_ATTACK_CLICK;
+                break;
+            default:
+                break;
+        }
     }
 
     void showCord();
 
     void move(){
-        gameState = MOVING;
+//        gameState = MOVING;
     }
 
     void attack(){
-        gameState = ATTACK;
+//        gameState = ATTACK;
     }
 
     void end(){
-        gameState = WAIT_CHECK;
+//        gameState = WAIT_CHECK;
     }
 
     std::shared_ptr<Tank> getTank(Cord cord);
@@ -123,6 +144,8 @@ private:
     Cord selectedCord = {0,0};
     bool isAttackSelected = false;
     Cord attackSelectedCord = {0,0};
+    Cord redTarget = {0,0};
+    Cord blueTarget = {0,0};
 };
 
 #endif /* defined(__simwar__Battle__) */
