@@ -3,6 +3,8 @@
 
 namespace config
 {
+    const int tank_max = 2;
+
 	const float window_height = 600.0f;
 	const float window_width = 1200.0f;
 

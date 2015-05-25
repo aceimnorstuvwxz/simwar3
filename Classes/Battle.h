@@ -15,10 +15,11 @@
 #include <cocos2d.h>
 #include <utility>
 #include <cstdlib>
-#include <ctime>
+#include <chrono>
 
 #include "MainScene.h"
 #include "Tank.h"
+#include "Msg.h"
 
 
 
@@ -46,6 +47,7 @@ public:
         FIRST_ATTACKING,
         WAIT_SECOND_ATTACK_CLICK,
         SECOND_ATTACKING,
+        WAIT_END_LOOP_CLICK,
         RED_WIN,
         BLUE_WIN
     } GAME_STATE;
@@ -63,6 +65,9 @@ public:
         _layer = battleLayer;
         _labelMessage = label;
         _labelWhoFirst = label2;
+        auto t = std::chrono::system_clock::now();
+        auto a = t.time_since_epoch().count();
+        std::srand(a);
     }
 
     void insertTank(Cord cord, Tank::TEAM team);
@@ -72,15 +77,17 @@ public:
     Cord pos2cord(const cocos2d::Vec2& pos);
 
     void message(const std::string& message ){
-        _labelMessage->setString(message);
+        CCLOG("key=%s", message.c_str());
+        _labelMessage->setString(Msg::get()[message]);
     }
 
     void whoFirst(const std::string& message){
-        _labelWhoFirst->setString(message);
+        CCLOG("key=%s", message.c_str());
+        _labelWhoFirst->setString(Msg::get()[message]);
     }
 
     void reset(){
-        message("新的战争开始了，请先放置10辆红军坦克。");
+        message("put_red");
         for (auto tank: blueTeam) {
             _layer->removeChild(tank->sprite);
         }
@@ -91,31 +98,53 @@ public:
         blueTeam.clear();
         gameState = ADDING_RED;
     }
+    int rand100(){
+        return std::rand()%100;
+    }
 
     void check(){
-        std::time_t t;
-        std::ctime(&t);
-        CCLOG("%ld", t);
-        std::srand(t);
         if (std::rand()%2 == 0 ){
-            whoFirst("红军先手，蓝军后手。");
+            whoFirst("red_first");
             isRedFirst = true;
         } else {
-            whoFirst("蓝军先手，红军后手。");
+            whoFirst("blue_first");
             isRedFirst = false;
         }
         switch (gameState) {
             case WAIT_MOVING_CHECK:
                 gameState =WAIT_FIRST_MOVING_CLICK;
-                message("请先手点击’机动‘后机动。");
+                message("click_move");
                 break;
             case WAIT_ATTACK_CHECK:
                 gameState = WAIT_FIRST_ATTACK_CLICK;
-                message("请先手点击’攻击‘后攻击。");
+                message("click_attack");
+                break;
+            case SECOND_MOVED:
+                if (isAllMoved()) {
+                    gameState = WAIT_FIRST_ATTACK_CLICK;
+                    message("to_acctack_first_attack");
+                } else {
+                    gameState = WAIT_FIRST_MOVING_CLICK;
+                    message("click_move");
+                }
                 break;
             default:
                 break;
         }
+    }
+
+    bool isAllMoved(){
+        for (auto tank : blueTeam) {
+            if (tank->canMove()) {
+                return false;
+            }
+        }
+        for (auto tank : redTeam) {
+            if (tank->canMove()) {
+                return false;
+            }
+        }
+        return true;
     }
 
     void showCord();
@@ -123,8 +152,13 @@ public:
     void move(){
         switch (gameState) {
             case WAIT_FIRST_MOVING_CLICK:
-                message("请选择坦克后点击目标位置进行机动。");
+                message("moveing");
                 gameState = FIRST_MOVING;
+                isSelected = false;
+                break;
+            case FIRST_MOVED:
+                message("second_moving");
+                gameState = SECOND_MOVING;
                 isSelected = false;
                 break;
                 
@@ -135,6 +169,21 @@ public:
 
     void attack(){
 //        gameState = ATTACK;
+        switch (gameState) {
+            case WAIT_FIRST_ATTACK_CLICK:
+                gameState = FIRST_ATTACKING;
+                message("first_attacking");
+                isSelected = false;
+                break;
+            case WAIT_SECOND_ATTACK_CLICK:
+                gameState = SECOND_ATTACKING;
+                message("second_attacking");
+                isSelected = false;
+                break;
+                
+            default:
+                break;
+        }
     }
 
     void end(){
@@ -183,6 +232,127 @@ private:
     cocos2d::Sprite* redTargetSp = nullptr;
     cocos2d::Sprite* blueTargetSp = nullptr;
 
+    int distance(Cord from ,Cord to){
+        int xx = from.x - to.x;
+        int yy = from.y - to.y;
+        return sqrt(xx*xx + yy*yy);
+    }
+    float distance2chance(int d){
+        if (d <= 10) return 0.9f;
+        if (d <= 20) return 0.85f;
+        if (d <= 30) return 0.6f;
+        if (d <= 40) return 0.4f;
+        if (d <= 50) return 0.2f;
+        if (d <= 60) return 0.1f;
+        if (d <= 70) return 0.1f;
+        if (d <= 80) return 0.05f;
+        if (d <= 90) return 0.01f;
+//        if (d <= 100) return 0.01f;
+//        if (d <= 110) return 0.01f;
+        return 0.f;
+    }
+
+    typedef enum {
+        DESTROY,
+        CANNOT_SHOT,
+        CANNOT_MOVE
+    } RES;
+
+    RES resutlGen(int a, int b , int c){
+        int r = rand100();
+        if (r < a) return DESTROY;
+        if (r < a + b ) return CANNOT_SHOT;
+        return CANNOT_MOVE;
+    }
+
+    RES dist2result(int dist){
+        if (dist <= 10) return resutlGen(90,5,5);
+        if (dist <= 20) return resutlGen(80,10,5);
+        if (dist <= 30) return resutlGen(70,15,5);
+        if (dist <= 40) return resutlGen(50,25,5);
+        if (dist <= 50) return resutlGen(40,30,5);
+        if (dist <= 60) return resutlGen(30,35,5);
+        if (dist <= 70) return resutlGen(20,40,5);
+        if (dist <= 80) return resutlGen(10,45,5);
+        if (dist <= 90) return resutlGen(6,47,5);
+        return CANNOT_MOVE;
+    }
+    void shot(Cord from ,Cord to){
+        CCLOG("shot");
+        auto src = getTank(from);
+        auto dst = getTank(to);
+        int dist = distance(from, to);
+        float change = distance2chance(dist);
+        bool ifSuccess = (rand100() <= change * 100);
+        if (ifSuccess) {
+            auto result = dist2result(dist);
+            dst->hasBeenShotted = true;
+            switch (result) {
+                case DESTROY:
+                    dst->state = Tank::ST_DEAD;
+                    break;
+                case CANNOT_MOVE:
+                    dst->state = Tank::ST_NOMOVE;
+                    break;
+                case CANNOT_SHOT:
+                    dst->state = Tank::ST_NOFIRE;
+                    break;
+                default:
+                    break;
+            }
+        }
+
+    }
+
+    bool allShotted(){
+        for (auto tank : blueTeam){
+            if (tank->canFire() && !tank->hasFired) return false;
+        }
+        for (auto tank : redTeam){
+            if (tank->canFire() && !tank->hasFired) return false;
+        }
+        return true;
+    }
+    void dealAttack(Cord cord){
+        if (isSelected) {
+            auto tank = getTank(cord);
+            if (tank != nullptr && !tank->hasBeenShotted && tank->team != getTank(selectedCord)->team  && pathIsSee(cord, selectedCord)) {
+                getTank(selectedCord)->hasFired = true;
+                shot(cord, selectedCord);
+                switch (gameState) {
+                    case FIRST_ATTACKING:
+                        gameState = WAIT_SECOND_ATTACK_CLICK;
+                        message("wait_second_attack");
+                        break;
+                    case SECOND_ATTACKING:
+                        if (allShotted()) {
+                            gameState = WAIT_END_LOOP_CLICK;
+                            message("end_loop");
+                        } else {
+                            gameState = WAIT_ATTACK_CHECK;
+                            message("wait_attack_check");
+                        }
+                        break;
+                    default:
+                        break;
+                }
+            }
+            isSelected = false;
+        } else {
+            auto tank = getTank(cord);
+            if (tank != nullptr && tank->canFire()) {
+                if ((gameState == FIRST_ATTACKING && isRedFirst && tank->team == Tank::T_RED)||
+                    (gameState == FIRST_ATTACKING && !isRedFirst && tank->team == Tank::T_BLUE)||
+                    (gameState == SECOND_ATTACKING && isRedFirst && tank->team == Tank::T_BLUE)||
+                    (gameState == SECOND_ATTACKING && !isRedFirst && tank->team == Tank::T_RED)
+                ){
+                    isSelected = true;
+                    selectedCord = cord;
+                }
+            }
+        }
+    }
+
     void dealMove(Cord cord){
 
         if (isSelected) {
@@ -198,12 +368,12 @@ private:
                     switch (gameState) {
                         case FIRST_MOVING:
                             gameState = FIRST_MOVED;
-                            message("后手此时可以发动机会攻击，或者点击’机动‘进行机动。");
+                            message("optinal_attack");
                             break;
 
                         case SECOND_MOVING:
                             gameState = SECOND_MOVED;
-                            message("先手此时可以发动机会攻击，或者继续下一步游戏。");
+                            message("optinal_attack2");
                             break;
 
                         default:

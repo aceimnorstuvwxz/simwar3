@@ -20,7 +20,7 @@ class Tank
 public:
     typedef enum {
         ST_ALIVE, //正常模式
-        ST_FIRE, //失火了
+        ST_NOFIRE, //失火了
         ST_NOMOVE, //失去动力
         ST_DEAD, //已被灭
     } STATE;
@@ -34,6 +34,7 @@ public:
     TEAM team = T_RED;
     bool hasMoved = false;
     bool hasFired = false;
+    bool hasBeenShotted = false;
     std::string name;
     Cord cord = {0,0};
     int move_points = config::init_move_point;//本回合剩余机动点数
@@ -48,13 +49,13 @@ public:
     }
 
     bool canMove(){
-        return hasMoved == false && (state == ST_ALIVE || state == ST_FIRE);
+        return hasMoved == false && (state == ST_ALIVE || state == ST_NOFIRE);
     }
 
     void nextCycle(){
         // 进入下一个回合，更新相关状态
         move_points = config::init_move_point;
-        hasFired = hasMoved = false;
+        hasFired = hasMoved = hasBeenShotted = false;
     }
 
 

@@ -24,7 +24,7 @@
 class Msg
 {
 public:
-    Msg& get(){
+    static Msg& get(){
         return _instance;
     }
 

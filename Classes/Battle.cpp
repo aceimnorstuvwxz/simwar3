@@ -94,18 +94,18 @@ void Battle::onClick(float x, float y)
         case ADDING_RED:
             if (getTank(cord) == nullptr) {
                 insertTank(cord, Tank::T_RED);
-                if (redTeam.size() >= 10) {
+                if (redTeam.size() >= config::tank_max) {
                     gameState = ADDING_BLUE;
-                    message("接下来请放置10辆蓝军坦克。");
+                    message("put_blue");
                 }
             }
             break;
         case ADDING_BLUE:
             if (getTank(cord) == nullptr) {
                 insertTank(cord, Tank::T_BLUE);
-                if (blueTeam.size() >= 10) {
+                if (blueTeam.size() >= config::tank_max) {
                     gameState = SET_RED_TARGET;
-                    message("请设置红军攻占目标。");
+                    message("set_red");
                 }
             }
             break;
@@ -115,19 +115,29 @@ void Battle::onClick(float x, float y)
                 redTarget = cord;
                 setRedTarget();
                 gameState = SET_BLUE_TARGET;
-                message("请设置蓝军攻占目标。");
+                message("set_blue");
             }
             break;
         case SET_BLUE_TARGET:
             if(getTank(cord) == nullptr && !(cord == redTarget)){
                 blueTarget = cord;
                 setBlueTarget();
-                gameState = WAIT_ATTACK_CHECK;
-                message("战争开始。进入机动阶段，请确定先手。");
+                gameState = WAIT_MOVING_CHECK;
+                message("start_war");
             }
             break;
         case FIRST_MOVING:
             dealMove(cord);
+            break;
+        case SECOND_MOVING:
+            dealMove(cord);
+            break;
+
+        case FIRST_ATTACKING:
+            dealAttack(cord);
+            break;
+        case SECOND_ATTACKING:
+            dealAttack(cord);
             break;
 
 //        case ATTACK:

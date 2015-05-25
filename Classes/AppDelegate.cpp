@@ -1,6 +1,7 @@
 #include "AppDelegate.h"
 #include "MainScene.h"
 #include "Common.h"
+#include "Msg.h"
 USING_NS_CC;
 
 AppDelegate::AppDelegate() {
@@ -34,7 +35,7 @@ bool AppDelegate::applicationDidFinishLaunching() {
     auto director = Director::getInstance();
     auto glview = director->getOpenGLView();
     if(!glview) {
-        glview = GLViewImpl::createWithRect("战争实验室", { 0.f, 0.f, config::window_width, config::window_height });
+        glview = GLViewImpl::createWithRect("Title"/* fix me Msg::get()["title"]*/, { 0.f, 0.f, config::window_width, config::window_height });
         director->setOpenGLView(glview);
     }
 

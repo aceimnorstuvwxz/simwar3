@@ -1,7 +1,7 @@
 #include "MainScene.h"
 #include "Common.h"
 #include "Battle.h"
-
+#include "Msg.h"
 USING_NS_CC;
 
 Scene* MainScene::createScene()
@@ -78,7 +78,7 @@ bool MainScene::init()
     Vec2 origin = Director::getInstance()->getVisibleOrigin();
 
     // 消息
-    auto label = Label::createWithTTF("按'开局'开始新一局游戏。", "fonts/myfont.ttf", 24);
+    auto label = Label::createWithTTF(Msg::get()["open"], "fonts/myfont.ttf", 24);
 
     // position the label on the center of the screen
     label->setPosition({config::map_space_width / 2, config::window_height - 50});
