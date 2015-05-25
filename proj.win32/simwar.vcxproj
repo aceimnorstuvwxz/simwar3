@@ -140,13 +140,18 @@ xcopy "$(ProjectDir)..\Resources" "$(OutDir)" /D /E /I /F /Y</Command>
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="..\Classes\AppDelegate.cpp" />
+    <ClCompile Include="..\Classes\Battle.cpp" />
     <ClCompile Include="..\Classes\MainScene.cpp" />
+    <ClCompile Include="..\Classes\Tank.cpp" />
     <ClCompile Include="main.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Classes\AppDelegate.h" />
+    <ClInclude Include="..\Classes\Battle.h" />
     <ClInclude Include="..\Classes\Common.h" />
     <ClInclude Include="..\Classes\MainScene.h" />
+    <ClInclude Include="..\Classes\Map.h" />
+    <ClInclude Include="..\Classes\Tank.h" />
     <ClInclude Include="main.h" />
   </ItemGroup>
   <ItemGroup>
@@ -166,7 +171,33 @@ xcopy "$(ProjectDir)..\Resources" "$(OutDir)" /D /E /I /F /Y</Command>
   </ItemGroup>
   <ItemGroup>
     <Image Include="..\Resources\background.jpg" />
+    <Image Include="..\Resources\blue_target.png" />
+    <Image Include="..\Resources\btn_attack.png" />
+    <Image Include="..\Resources\btn_attack_p.png" />
+    <Image Include="..\Resources\btn_check.png" />
+    <Image Include="..\Resources\btn_check_p.png" />
+    <Image Include="..\Resources\btn_end.png" />
+    <Image Include="..\Resources\btn_end_p.png" />
+    <Image Include="..\Resources\btn_move.png" />
+    <Image Include="..\Resources\btn_move_p.png" />
+    <Image Include="..\Resources\btn_reset.png" />
+    <Image Include="..\Resources\btn_reset_p.png" />
+    <Image Include="..\Resources\CloseNormal.png" />
+    <Image Include="..\Resources\CloseSelected.png" />
+    <Image Include="..\Resources\HelloWorld.png" />
+    <Image Include="..\Resources\l0.png" />
+    <Image Include="..\Resources\l1.png" />
+    <Image Include="..\Resources\l2.png" />
+    <Image Include="..\Resources\l3.png" />
+    <Image Include="..\Resources\l4.png" />
+    <Image Include="..\Resources\map.bmp" />
     <Image Include="..\Resources\map.jpg" />
+    <Image Include="..\Resources\red_target.png" />
+    <Image Include="..\Resources\select.png" />
+    <Image Include="..\Resources\setting_bg.png" />
+    <Image Include="..\Resources\status.png" />
+    <Image Include="..\Resources\tank_blue.png" />
+    <Image Include="..\Resources\tank_red.png" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

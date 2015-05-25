@@ -21,6 +21,12 @@
     <ClCompile Include="..\Classes\MainScene.cpp">
       <Filter>src</Filter>
     </ClCompile>
+    <ClCompile Include="..\Classes\Battle.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\Tank.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="main.h">
@@ -35,6 +41,15 @@
     <ClInclude Include="..\Classes\Common.h">
       <Filter>src</Filter>
     </ClInclude>
+    <ClInclude Include="..\Classes\Battle.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\Map.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\Tank.h">
+      <Filter>src</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="game.rc">
@@ -46,6 +61,84 @@
       <Filter>resource</Filter>
     </Image>
     <Image Include="..\Resources\background.jpg">
+      <Filter>resource</Filter>
+    </Image>
+    <Image Include="..\Resources\blue_target.png">
+      <Filter>resource</Filter>
+    </Image>
+    <Image Include="..\Resources\btn_attack.png">
+      <Filter>resource</Filter>
+    </Image>
+    <Image Include="..\Resources\btn_attack_p.png">
+      <Filter>resource</Filter>
+    </Image>
+    <Image Include="..\Resources\btn_check.png">
+      <Filter>resource</Filter>
+    </Image>
+    <Image Include="..\Resources\btn_check_p.png">
+      <Filter>resource</Filter>
+    </Image>
+    <Image Include="..\Resources\btn_end.png">
+      <Filter>resource</Filter>
+    </Image>
+    <Image Include="..\Resources\btn_end_p.png">
+      <Filter>resource</Filter>
+    </Image>
+    <Image Include="..\Resources\btn_move.png">
+      <Filter>resource</Filter>
+    </Image>
+    <Image Include="..\Resources\btn_move_p.png">
+      <Filter>resource</Filter>
+    </Image>
+    <Image Include="..\Resources\btn_reset.png">
+      <Filter>resource</Filter>
+    </Image>
+    <Image Include="..\Resources\btn_reset_p.png">
+      <Filter>resource</Filter>
+    </Image>
+    <Image Include="..\Resources\CloseNormal.png">
+      <Filter>resource</Filter>
+    </Image>
+    <Image Include="..\Resources\CloseSelected.png">
+      <Filter>resource</Filter>
+    </Image>
+    <Image Include="..\Resources\HelloWorld.png">
+      <Filter>resource</Filter>
+    </Image>
+    <Image Include="..\Resources\l0.png">
+      <Filter>resource</Filter>
+    </Image>
+    <Image Include="..\Resources\l1.png">
+      <Filter>resource</Filter>
+    </Image>
+    <Image Include="..\Resources\l2.png">
+      <Filter>resource</Filter>
+    </Image>
+    <Image Include="..\Resources\l3.png">
+      <Filter>resource</Filter>
+    </Image>
+    <Image Include="..\Resources\l4.png">
+      <Filter>resource</Filter>
+    </Image>
+    <Image Include="..\Resources\map.bmp">
+      <Filter>resource</Filter>
+    </Image>
+    <Image Include="..\Resources\red_target.png">
+      <Filter>resource</Filter>
+    </Image>
+    <Image Include="..\Resources\select.png">
+      <Filter>resource</Filter>
+    </Image>
+    <Image Include="..\Resources\setting_bg.png">
+      <Filter>resource</Filter>
+    </Image>
+    <Image Include="..\Resources\status.png">
+      <Filter>resource</Filter>
+    </Image>
+    <Image Include="..\Resources\tank_blue.png">
+      <Filter>resource</Filter>
+    </Image>
+    <Image Include="..\Resources\tank_red.png">
       <Filter>resource</Filter>
     </Image>
   </ItemGroup>
