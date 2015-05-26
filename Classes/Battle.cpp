@@ -12,6 +12,8 @@ USING_NS_CC;
 
 Battle Battle::_instance;
 
+
+
 void Battle::insertTank(Cord cord, Tank::TEAM team)
 {
     auto tank = std::make_shared<Tank>();
@@ -27,6 +29,11 @@ void Battle::insertTank(Cord cord, Tank::TEAM team)
         blueTeam.push_back(tank);
     }
     _layer->addChild(tank->sprite, 5);
+
+    tank->smallSprite = cocos2d::Sprite::create(team == Tank::T_RED ? "tank_red.png" : "tank_blue.png" );
+    tank->smallSprite->setScale(config::small_scale);
+    tank->smallSprite->setPosition(cord2mallPos(cord));
+    _frontLayer->addChild(tank->smallSprite, 100);
 }
 
 Vec2 Battle::cord2pos(Cord cord)
@@ -34,6 +41,13 @@ Vec2 Battle::cord2pos(Cord cord)
     float x = config::cube_x + cord.x * config::cube_x * 1.5;
     float y = cord.x%2 == 0 ? (1 + 2*cord.y):(2 + 2*cord.y);
     y = config::cube_y * y;
+    return {x, y};
+}
+
+Vec2 Battle::cord2mallPos(Cord cord)
+{
+    float x = config::minimap_x + cord.x / 80.0f * config::minimap_width;
+    float y = config::minimap_y + cord.y / 80.f * config::minimap_height;
     return {x, y};
 }
 

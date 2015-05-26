@@ -154,7 +154,7 @@ bool MainScene::init()
 
     _battleLayer = Layer::create();
     auto battle = Battle::getInstance();
-    battle->init(_battleLayer, label, label2, b0, b1, b2, b3, b4);
+    battle->init(_battleLayer, label, label2, b0, b1, b2, b3, b4, this);
 
 	// 大地图
 	_mainMap = Sprite::create("map.jpg");

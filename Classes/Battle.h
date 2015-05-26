@@ -61,7 +61,7 @@ public:
         return &_instance;
     }
     void init(cocos2d::Layer* battleLayer, cocos2d::Label* label, cocos2d::Label* label2,
-              cocos2d::Label* b0, cocos2d::Label* b1,cocos2d::Label* b2,cocos2d::Label* b3,cocos2d::Label* b4)
+              cocos2d::Label* b0, cocos2d::Label* b1,cocos2d::Label* b2,cocos2d::Label* b3,cocos2d::Label* b4, cocos2d::Layer* frontLayer)
     {
         _layer = battleLayer;
         _labelMessage = label;
@@ -74,12 +74,14 @@ public:
         statusX[2] = b2;
         statusX[3] = b3;
         statusX[4] = b4;
+        _frontLayer = frontLayer;
     }
 
     void insertTank(Cord cord, Tank::TEAM team);
 
 
     cocos2d::Vec2 cord2pos(Cord cord);
+    cocos2d::Vec2 cord2mallPos(Cord cord);
     Cord pos2cord(const cocos2d::Vec2& pos);
 
     void message(const std::string& message ){
@@ -96,9 +98,11 @@ public:
         message("put_red");
         for (auto tank: blueTeam) {
             _layer->removeChild(tank->sprite);
+            _frontLayer->removeChild(tank->smallSprite);
         }
         for (auto tank: redTeam) {
             _layer->removeChild(tank->sprite);
+            _frontLayer->removeChild(tank->smallSprite);
         }
         redTeam.clear();
         blueTeam.clear();
@@ -300,6 +304,7 @@ private:
     cocos2d::Label* _labelMessage;
     cocos2d::Label* _labelWhoFirst;
     cocos2d::Layer* _layer;
+    cocos2d::Layer* _frontLayer;
     Battle(){};
     static Battle _instance;
     int getCube(Cord cord);
@@ -449,6 +454,7 @@ private:
                     tank->move_points -= pathCost(selectedCord, cord);
                     auto move = cocos2d::MoveTo::create(config::tank_move_time,cord2pos(cord));
                     tank->sprite->runAction(move);
+                    tank->smallSprite->setPosition(cord2mallPos(cord));
                     tank->hasMoved = true;
                     switch (gameState) {
                         case FIRST_MOVING:

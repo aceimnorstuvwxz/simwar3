@@ -39,6 +39,7 @@ public:
     Cord cord = {0,0};
     int move_points = config::init_move_point;//本回合剩余机动点数
     cocos2d::Sprite* sprite;
+    cocos2d::Sprite* smallSprite;
 
     int distance(int x, int y){
         return sqrt((cord.x - x)*(cord.x - x) + (cord.y - y)*(cord.y - y));

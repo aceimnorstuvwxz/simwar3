@@ -66,6 +66,7 @@ namespace config
 
     // 杂
     const float target_scale = 0.5f;
+    const float small_scale = 0.07f;
 }
 typedef
 struct _cord
