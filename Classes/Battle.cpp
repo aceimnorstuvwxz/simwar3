@@ -90,6 +90,7 @@ void Battle::onClick(float x, float y)
      BLUE_WIN
      */
     Cord cord = pos2cord({x,y});
+    showCord(cord);
     switch (gameState) {
         case ADDING_RED:
             if (getTank(cord) == nullptr) {
@@ -155,6 +156,7 @@ void Battle::onClick(float x, float y)
         default:
             break;
     }
+    showCord(cord);
 }
 
 int Battle::getCube(Cord cord)

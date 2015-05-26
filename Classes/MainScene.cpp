@@ -79,7 +79,7 @@ bool MainScene::init()
 
     // 消息
     auto label = Label::createWithTTF(Msg::get()["open"], "fonts/myfont.ttf", 24);
-
+    label->setColor({0,1,0});
     // position the label on the center of the screen
     label->setPosition({config::map_space_width / 2, config::window_height - 50});
 
@@ -87,7 +87,9 @@ bool MainScene::init()
     this->addChild(label, 100);
 
     auto label2 = Label::createWithTTF("", "fonts/myfont.ttf", 20);
-    label2->setPosition({config::status_x + 100, config::status_y_0});
+    label2->setAnchorPoint({0,0});
+    label2->setPosition({config::btn_x + 100, config::btn_y_0});
+    label2->setColor({0,0,0});
     this->addChild(label2, 100);
 
 
@@ -102,6 +104,21 @@ bool MainScene::init()
     l0->setScale(config::status_scale);
     l0->setPosition({config::status_l_x, config::status_y_0, });
     this->addChild(l0, 10);
+
+    auto makeBx = [&](float x, float y){
+        auto b0 = Label::createWithTTF("", "fonts/myfont.ttf", 20);
+        b0->setAnchorPoint({0,0});
+        b0->setPosition({x, y-5});
+        b0->setColor({0,0,0});
+        this->addChild(b0, 100);
+        return b0;
+    };
+
+    auto b0 = makeBx(config::status_l_x2, config::status_y_0);
+    auto b1 = makeBx(config::status_l_x2, config::status_y_1);
+    auto b2 = makeBx(config::status_l_x2, config::status_y_2);
+    auto b3 = makeBx(config::status_l_x2, config::status_y_3);
+    auto b4 = makeBx(config::status_l_x2, config::status_y_4);
 
     auto l1 = Sprite::create("l1.png");
     l1->setAnchorPoint({0,0});
@@ -137,7 +154,7 @@ bool MainScene::init()
 
     _battleLayer = Layer::create();
     auto battle = Battle::getInstance();
-    battle->init(_battleLayer, label, label2);
+    battle->init(_battleLayer, label, label2, b0, b1, b2, b3, b4);
 
 	// 大地图
 	_mainMap = Sprite::create("map.jpg");

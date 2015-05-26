@@ -46,7 +46,7 @@ namespace config
     const float status_y_4 = status_y_3 - status_y_line_height;
     const float status_y_5 = status_y_4 - status_y_line_height;
     const float status_l_x = setting_area_x + 20;
-
+    const float status_l_x2 = setting_area_x + 130;
     // 按键
     const float btn_x = setting_area_x + 20;
     const float btn_y_start  = status_y_5 - 20;

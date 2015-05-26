@@ -12,13 +12,20 @@
 	"click_move":"请先手点击'机动'后机动。",
 	"click_attack":"请先手点击'攻击'后攻击。",
 	"moveing":"请选择坦克后点击目标位置进行机动。",
-	"optinal_attack":"后手此时可以发动机会攻击，或者点击'机动'进行机动。",
-	"optinal_attack2":"先手此时可以发动机会攻击，或者继续下一步游戏。",
+	"optinal_attack":"后手'机动'进行机动。",
+	"optinal_attack2":"继续下一步游戏。",
 	"second_moving":"后手移动",
 	"to_acctack_first_attack":"全部坦克已经移动完毕，进入攻击阶段，先手请按'攻击'。",
 	"first_attacking":"先手攻击，先选中我方坦克，然后点击敌方坦克，进行射击。",
 	"wait_attack_check":"请确定攻击先后手。",
 	"end_loop":"全部射击完毕，请结束回合。",
 	"wait_second_attack":"后手请按'攻击'",
-	"second_attacking":"后手攻击，先选中我方坦克，然后点击敌方坦克，进行射击。"
+	"second_attacking":"后手攻击，先选中我方坦克，然后点击敌方坦克，进行射击。",
+	"st_alive":"完好",
+	"st_dead":"已摧毁",
+	"st_nofire":"失去火力",
+	"st_nomove":"失去机动能力",
+	"next_cycle":"进入新回合，机动阶段，请先确定先手。",
+	"blue_win":"蓝军获胜！！",
+	"red_win":"红军获胜！！"
 }

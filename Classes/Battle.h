@@ -60,7 +60,8 @@ public:
     static Battle* getInstance(){
         return &_instance;
     }
-    void init(cocos2d::Layer* battleLayer, cocos2d::Label* label, cocos2d::Label* label2)
+    void init(cocos2d::Layer* battleLayer, cocos2d::Label* label, cocos2d::Label* label2,
+              cocos2d::Label* b0, cocos2d::Label* b1,cocos2d::Label* b2,cocos2d::Label* b3,cocos2d::Label* b4)
     {
         _layer = battleLayer;
         _labelMessage = label;
@@ -68,6 +69,11 @@ public:
         auto t = std::chrono::system_clock::now();
         auto a = t.time_since_epoch().count();
         std::srand(a);
+        statusX[0] = b0;
+        statusX[1] = b1;
+        statusX[2] = b2;
+        statusX[3] = b3;
+        statusX[4] = b4;
     }
 
     void insertTank(Cord cord, Tank::TEAM team);
@@ -147,7 +153,37 @@ public:
         return true;
     }
 
-    void showCord();
+    inline std::string getStateString(Tank::STATE st){
+        switch (st) {
+            case Tank::ST_ALIVE:
+                return Msg::get()["st_alive"];
+            case Tank::ST_DEAD:
+                return Msg::get()["st_dead"];
+            case Tank::ST_NOFIRE:
+                return Msg::get()["st_nofire"];
+            case Tank::ST_NOMOVE:
+                return Msg::get()["st_nomove"];
+            default:
+                break;
+        }
+    }
+
+    void showCord(Cord cord){
+        auto tank = getTank(cord);
+        if  (tank == nullptr) {
+            for (int i = 0; i < 5; i++) {
+                statusX[i]->setString("----n/a----");
+            }
+        } else {
+            std::stringstream s;
+            s << tank->move_points;
+            statusX[0]->setString(s.str());
+            statusX[1]->setString(tank->hasMoved? "Yes":"No");
+            statusX[2]->setString(tank->hasFired? "Yes":"No");
+            statusX[3]->setString(tank->hasBeenShotted? "Yes":"No");
+            statusX[4]->setString(getStateString(tank->state));
+        }
+    }
 
     void move(){
         switch (gameState) {
@@ -186,8 +222,56 @@ public:
         }
     }
 
+    bool isRedAllGone(){
+        for (auto tank :redTeam){
+            if (tank ->state != Tank::ST_DEAD) return false;
+        }
+        return true;
+    }
+
+    bool isBlueAllGone(){
+        for (auto tank :blueTeam){
+            if (tank->state != Tank::ST_DEAD) return false;
+        }
+        return true;
+    }
+
+    bool isRedWin(){
+        if (isBlueAllGone() ) return true;
+
+        for (auto tank : redTeam)
+            if (tank->cord == redTarget) return true;
+
+        return false;
+    }
+
+    bool isBlueWin(){
+        if (isRedAllGone()) return true;
+
+        for (auto tank: blueTeam)
+            if (tank->cord == blueTarget) return true;
+
+        return false;
+    }
+
+    void nextCycle(){
+        for (auto tank :blueTeam) {
+            tank->nextCycle();
+        }
+        for (auto tank : redTeam) {
+            tank->nextCycle();
+        }
+    }
+
     void end(){
-//        gameState = WAIT_CHECK;
+        if (isRedWin()) message("red_win");
+
+        if (isBlueWin()) message("blue_win");
+
+        nextCycle();
+        gameState = WAIT_MOVING_CHECK;
+        message("next_cycle");
+
     }
 
     std::shared_ptr<Tank> getTank(Cord cord);
@@ -231,6 +315,7 @@ private:
     Cord blueTarget = {0,0};
     cocos2d::Sprite* redTargetSp = nullptr;
     cocos2d::Sprite* blueTargetSp = nullptr;
+    cocos2d::Label* statusX[5];
 
     int distance(Cord from ,Cord to){
         int xx = from.x - to.x;
@@ -318,7 +403,7 @@ private:
             auto tank = getTank(cord);
             if (tank != nullptr && !tank->hasBeenShotted && tank->team != getTank(selectedCord)->team  && pathIsSee(cord, selectedCord)) {
                 getTank(selectedCord)->hasFired = true;
-                shot(cord, selectedCord);
+                shot(selectedCord, cord);
                 switch (gameState) {
                     case FIRST_ATTACKING:
                         gameState = WAIT_SECOND_ATTACK_CLICK;
@@ -389,7 +474,8 @@ private:
             }
             isSelected = false;
         } else {
-            if (getTank(cord)!= nullptr && getTank(cord)->hasMoved == false) {
+            auto tank = getTank(cord);
+            if (tank!= nullptr && tank->canMove()) {
                 auto tank = getTank(cord);
                 if ((gameState == FIRST_MOVING && isRedFirst && tank->team == Tank::T_RED) ||
                     (gameState == FIRST_MOVING && !isRedFirst && tank->team == Tank::T_BLUE) ||
