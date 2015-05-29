@@ -66,6 +66,7 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <LibraryPath>$(MSBuildProgramFiles32)\Microsoft SDKs\Windows\v7.1A\lib;$(LibraryPath)</LibraryPath>
+    <IncludePath>C:\Users\chenbingfeng\freegit\simwar3;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LibraryPath>$(MSBuildProgramFiles32)\Microsoft SDKs\Windows\v7.1A\lib;$(LibraryPath)</LibraryPath>
@@ -142,6 +143,7 @@ xcopy "$(ProjectDir)..\Resources" "$(OutDir)" /D /E /I /F /Y</Command>
     <ClCompile Include="..\Classes\AppDelegate.cpp" />
     <ClCompile Include="..\Classes\Battle.cpp" />
     <ClCompile Include="..\Classes\MainScene.cpp" />
+    <ClCompile Include="..\Classes\Msg.cpp" />
     <ClCompile Include="..\Classes\Tank.cpp" />
     <ClCompile Include="main.cpp" />
   </ItemGroup>
@@ -151,6 +153,7 @@ xcopy "$(ProjectDir)..\Resources" "$(OutDir)" /D /E /I /F /Y</Command>
     <ClInclude Include="..\Classes\Common.h" />
     <ClInclude Include="..\Classes\MainScene.h" />
     <ClInclude Include="..\Classes\Map.h" />
+    <ClInclude Include="..\Classes\Msg.h" />
     <ClInclude Include="..\Classes\Tank.h" />
     <ClInclude Include="main.h" />
   </ItemGroup>
@@ -198,6 +201,9 @@ xcopy "$(ProjectDir)..\Resources" "$(OutDir)" /D /E /I /F /Y</Command>
     <Image Include="..\Resources\status.png" />
     <Image Include="..\Resources\tank_blue.png" />
     <Image Include="..\Resources\tank_red.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\Resources\message.json" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

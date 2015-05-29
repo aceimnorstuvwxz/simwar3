@@ -9,7 +9,6 @@
 #ifndef __simwar__Battle__
 #define __simwar__Battle__
 
-#include <stdio.h>
 #include <vector>
 #include <memory>
 #include <cocos2d.h>

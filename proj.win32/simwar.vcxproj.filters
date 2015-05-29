@@ -27,6 +27,9 @@
     <ClCompile Include="..\Classes\Tank.cpp">
       <Filter>src</Filter>
     </ClCompile>
+    <ClCompile Include="..\Classes\Msg.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="main.h">
@@ -48,6 +51,9 @@
       <Filter>src</Filter>
     </ClInclude>
     <ClInclude Include="..\Classes\Tank.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\Msg.h">
       <Filter>src</Filter>
     </ClInclude>
   </ItemGroup>
@@ -141,5 +147,10 @@
     <Image Include="..\Resources\tank_red.png">
       <Filter>resource</Filter>
     </Image>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\Resources\message.json">
+      <Filter>resource</Filter>
+    </None>
   </ItemGroup>
 </Project>

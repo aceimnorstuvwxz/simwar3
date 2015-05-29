@@ -18,7 +18,13 @@
 #include "../rapidjson/document.h"
 #include "../rapidjson/writer.h"
 #include "../rapidjson/stringbuffer.h"
+#endif
 
+#ifdef _WIN32
+#include "rapidjson\rapidjson.h"	
+#include "rapidjson\document.h"
+#include "rapidjson\writer.h"
+#include "rapidjson\stringbuffer.h"
 #endif
 
 class Msg
