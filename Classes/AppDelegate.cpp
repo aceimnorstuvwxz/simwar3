@@ -1,3 +1,5 @@
+/* cocos2d-x 自动生成的文件，App入口委托*/
+
 #include "AppDelegate.h"
 #include "MainScene.h"
 #include "Common.h"
@@ -35,7 +37,7 @@ bool AppDelegate::applicationDidFinishLaunching() {
     auto director = Director::getInstance();
     auto glview = director->getOpenGLView();
     if(!glview) {
-        glview = GLViewImpl::createWithRect("Title"/* fix me Msg::get()["title"]*/, { 0.f, 0.f, config::window_width, config::window_height });
+        glview = GLViewImpl::createWithRect("Title"/* fix me Msg::get()["title"]*/, { 0.f, 0.f, config::window_width, config::window_height });//设置窗口大小。
         director->setOpenGLView(glview);
     }
 

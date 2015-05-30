@@ -1,10 +1,4 @@
-//
-//  Tank.h
-//  simwar
-//
-//  Created by chenbingfeng on 15/5/23.
-//
-//
+// 表示一个坦克
 
 #ifndef __simwar__Tank__
 #define __simwar__Tank__
@@ -30,16 +24,16 @@ public:
         T_RED
     } TEAM;
 
-    STATE state = ST_ALIVE;
-    TEAM team = T_RED;
-    bool hasMoved = false;
+    STATE state = ST_ALIVE; //坦克状态
+    TEAM team = T_RED; //坦克队伍
+    bool hasMoved = false; //本回合是否动过
     bool hasFired = false;
     bool hasBeenShotted = false;
-    std::string name;
-    Cord cord = {0,0};
+    std::string name;//无用
+    Cord cord = {0,0};//坐标
     int move_points = config::init_move_point;//本回合剩余机动点数
-    cocos2d::Sprite* sprite;
-    cocos2d::Sprite* smallSprite;
+    cocos2d::Sprite* sprite;//大地图上的图片
+    cocos2d::Sprite* smallSprite;//小地图上的点
 
     int distance(int x, int y){
         return sqrt((cord.x - x)*(cord.x - x) + (cord.y - y)*(cord.y - y));
@@ -58,8 +52,6 @@ public:
         move_points = config::init_move_point;
         hasFired = hasMoved = hasBeenShotted = false;
     }
-
-
 };
 
 

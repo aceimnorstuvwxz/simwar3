@@ -1,3 +1,4 @@
+/* cocos2d-x 自动生成的文件，窗口委托*/
 #ifndef  _APP_DELEGATE_H_
 #define  _APP_DELEGATE_H_
 

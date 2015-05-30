@@ -1,10 +1,9 @@
-//
-//  Msg.h
-//  simwar
-//
-//  Created by chenbingfeng on 15/5/25.
-//
-//
+
+//用来从resource/message.json读取中文字符串。
+
+//使用方法：
+//Msg::get()["key_word"]
+
 
 #ifndef __simwar__Msg__
 #define __simwar__Msg__

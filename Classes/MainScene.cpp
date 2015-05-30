@@ -12,13 +12,14 @@ Scene* MainScene::createScene()
     // 'layer' is an autorelease object
     auto layer = MainScene::create();
 
-    scene->addChild(layer->_battleLayer);
-    scene->addChild(layer);
+    scene->addChild(layer->_battleLayer);//大地图所在layer
+    scene->addChild(layer);//UIlayer
 
     // return the scene
     return scene;
 }
 
+//添加某个按钮
 void MainScene::decorateFunctionButton(const std::string& img0, const std::string& img1,  float x, float y, int tag)
 {
     auto button = ui::Button::create(img0, img1);
@@ -31,7 +32,9 @@ void MainScene::decorateFunctionButton(const std::string& img0, const std::strin
     this->addChild(button, 11);
 }
 
+// 处理按钮响应
 void MainScene::touchEvent(Ref *pSender, cocos2d::ui::Widget::TouchEventType type){
+
     auto button = static_cast<cocos2d::ui::Button*>(pSender);
     int tag = button->getTag();
     if (type != cocos2d::ui::Widget::TouchEventType::ENDED) {
@@ -64,7 +67,7 @@ void MainScene::touchEvent(Ref *pSender, cocos2d::ui::Widget::TouchEventType typ
 }
 
 
-// on "init" you need to initialize your instance
+// 初始化UI
 bool MainScene::init()
 {
     //////////////////////////////

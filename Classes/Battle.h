@@ -1,13 +1,5 @@
-//
-//  Battle.h
-//  simwar
-//
-//  Created by chenbingfeng on 15/5/23.
-//
-//
-
-#ifndef __simwar__Battle__
-#define __simwar__Battle__
+#ifndef __simwar_battle__
+#define __simwar_battle__
 
 #include <vector>
 #include <memory>
@@ -27,72 +19,83 @@ class Battle
 public:
     typedef enum
     {
-        INIT,
-        ADDING_RED,
-        ADDING_BLUE,
-        SET_RED_TARGET,
-        SET_BLUE_TARGET,
-        WAIT_MOVING_CHECK,
-        WAIT_FIRST_MOVING_CLICK,
-        FIRST_MOVING,
-        FIRST_MOVED,
-        SECOND_MOVING_ATTACKING,
-        WAIT_SECOND_MOVING_CLICK,
-        SECOND_MOVING,
-        SECOND_MOVED,
-        FIRST_MOVING_ATTACKING,
-        WAIT_ATTACK_CHECK,
-        WAIT_FIRST_ATTACK_CLICK,
-        FIRST_ATTACKING,
-        WAIT_SECOND_ATTACK_CLICK,
-        SECOND_ATTACKING,
-        WAIT_END_LOOP_CLICK,
-        RED_WIN,
-        BLUE_WIN
-    } GAME_STATE;
+        INIT, // 刚打开程序时
+        ADDING_RED,//正在添加红军
+        ADDING_BLUE, //正在添加蓝军
+        SET_RED_TARGET,//正在设置红军目标
+        SET_BLUE_TARGET,//正在设置蓝军目标
+        WAIT_MOVING_CHECK,//等待机动的先后手判定
+        WAIT_FIRST_MOVING_CLICK,//等待先手按机动按钮
+        FIRST_MOVING,//先手移动中
+        FIRST_MOVED,//先手已经移动
+        SECOND_MOVING_ATTACKING,//无用
+        WAIT_SECOND_MOVING_CLICK,//等待后手按机动按钮
+        SECOND_MOVING,//后手移动中
+        SECOND_MOVED,//后手移动完
+        FIRST_MOVING_ATTACKING,//无用
+        WAIT_ATTACK_CHECK,//等待攻击的先后手判定
+        WAIT_FIRST_ATTACK_CLICK,//等待先手按攻击
+        FIRST_ATTACKING,//先手攻击中
+        WAIT_SECOND_ATTACK_CLICK,//等待后手按攻击
+        SECOND_ATTACKING,//后手攻击中
+        WAIT_END_LOOP_CLICK,//等待结束回合按钮
+        RED_WIN,//红军胜
+        BLUE_WIN//蓝军胜
+	} GAME_STATE;/* 游戏状态定义 */
 
-    GAME_STATE gameState = INIT;
-    std::vector<std::shared_ptr<Tank>> redTeam;
-    std::vector<std::shared_ptr<Tank>> blueTeam;
-    bool isRedFirst = false;
+    GAME_STATE gameState = INIT;//游戏状态记录
+    std::vector<std::shared_ptr<Tank>> redTeam;//红军队列
+    std::vector<std::shared_ptr<Tank>> blueTeam;//蓝军队列
+    bool isRedFirst = false;//是否红军先手
 
-    static Battle* getInstance(){
+    static Battle* getInstance(){//单例的获取函数
         return &_instance;
     }
+	//初始化battle
     void init(cocos2d::Layer* battleLayer, cocos2d::Label* label, cocos2d::Label* label2,
               cocos2d::Label* b0, cocos2d::Label* b1,cocos2d::Label* b2,cocos2d::Label* b3,cocos2d::Label* b4, cocos2d::Layer* frontLayer)
     {
+		//存储一些内容
         _layer = battleLayer;
         _labelMessage = label;
         _labelWhoFirst = label2;
+		statusX[0] = b0;
+		statusX[1] = b1;
+		statusX[2] = b2;
+		statusX[3] = b3;
+		statusX[4] = b4;
+		_frontLayer = frontLayer;
+
+		//设置随机种子
         auto t = std::chrono::system_clock::now();
         auto a = t.time_since_epoch().count();
         std::srand(a);
-        statusX[0] = b0;
-        statusX[1] = b1;
-        statusX[2] = b2;
-        statusX[3] = b3;
-        statusX[4] = b4;
-        _frontLayer = frontLayer;
     }
 
+	//插入一辆坦克
     void insertTank(Cord cord, Tank::TEAM team);
 
 
+	//从地图坐标到地图的像素坐标
     cocos2d::Vec2 cord2pos(Cord cord);
+	//从地图坐标到小地图的像素坐标
     cocos2d::Vec2 cord2mallPos(Cord cord);
+	//从像素坐标到地图坐标
     Cord pos2cord(const cocos2d::Vec2& pos);
 
+	//显示某条消息
     void message(const std::string& message ){
         CCLOG("key=%s", message.c_str());
         _labelMessage->setString(Msg::get()[message]);
     }
 
+	//显示先后手
     void whoFirst(const std::string& message){
         CCLOG("key=%s", message.c_str());
         _labelWhoFirst->setString(Msg::get()[message]);
     }
 
+	//开局
     void reset(){
         message("put_red");
         for (auto tank: blueTeam) {
@@ -107,10 +110,12 @@ public:
         blueTeam.clear();
         gameState = ADDING_RED;
     }
+	//随机100,用来进行攻击结果判定
     int rand100(){
         return std::rand()%100;
     }
 
+	//先后手裁决
     void check(){
         if (std::rand()%2 == 0 ){
             whoFirst("red_first");
@@ -142,6 +147,7 @@ public:
         }
     }
 
+	//是否所有坦克都已经移动了.
     bool isAllMoved(){
         for (auto tank : blueTeam) {
             if (tank->canMove()) {
@@ -156,6 +162,7 @@ public:
         return true;
     }
 
+	//获取状态的字符串
     inline std::string getStateString(Tank::STATE st){
         switch (st) {
             case Tank::ST_ALIVE:
@@ -171,6 +178,7 @@ public:
         }
     }
 
+	//显示某个坐标的信息
     void showCord(Cord cord){
         auto tank = getTank(cord);
         if  (tank == nullptr) {
@@ -188,6 +196,7 @@ public:
         }
     }
 
+	//机动按钮
     void move(){
         switch (gameState) {
             case WAIT_FIRST_MOVING_CLICK:
@@ -206,6 +215,7 @@ public:
         }
     }
 
+	//攻击
     void attack(){
 //        gameState = ATTACK;
         switch (gameState) {
@@ -225,6 +235,7 @@ public:
         }
     }
 
+	//是否所有红军都灭了
     bool isRedAllGone(){
         for (auto tank :redTeam){
             if (tank ->state != Tank::ST_DEAD) return false;
@@ -232,6 +243,7 @@ public:
         return true;
     }
 
+	//是否所有蓝军都灭了
     bool isBlueAllGone(){
         for (auto tank :blueTeam){
             if (tank->state != Tank::ST_DEAD) return false;
@@ -239,6 +251,7 @@ public:
         return true;
     }
 
+	//是否红军胜
     bool isRedWin(){
         if (isBlueAllGone() ) return true;
 
@@ -248,6 +261,7 @@ public:
         return false;
     }
 
+	//是否蓝军胜
     bool isBlueWin(){
         if (isRedAllGone()) return true;
 
@@ -257,6 +271,7 @@ public:
         return false;
     }
 
+	//下一个回合
     void nextCycle(){
         for (auto tank :blueTeam) {
             tank->nextCycle();
@@ -266,6 +281,7 @@ public:
         }
     }
 
+	//结束回合按钮
     void end(){
         if (isRedWin()) message("red_win");
 
@@ -277,10 +293,13 @@ public:
 
     }
 
+	//获取某个坐标的坦克,如果该位置没坦克则返回nullptr
     std::shared_ptr<Tank> getTank(Cord cord);
 
+	//在地图上点击的响应.
     void onClick(float x, float y);
 
+	//设置红军目标
     void setRedTarget(){
         if (redTargetSp == nullptr) {
             redTargetSp = cocos2d::Sprite::create("red_target.png");
@@ -290,6 +309,7 @@ public:
         }
         redTargetSp->setPosition(cord2pos(redTarget));
     }
+	//设置蓝军目标
     void setBlueTarget(){
         if (blueTargetSp == nullptr) {
             blueTargetSp = cocos2d::Sprite::create("blue_target.png");
@@ -300,19 +320,19 @@ public:
         blueTargetSp->setPosition(cord2pos(blueTarget));
     }
 private:
-    cocos2d::Label* _labelMessage;
-    cocos2d::Label* _labelWhoFirst;
-    cocos2d::Layer* _layer;
-    cocos2d::Layer* _frontLayer;
+    cocos2d::Label* _labelMessage;//上方的消息label
+    cocos2d::Label* _labelWhoFirst;//先后手的label
+    cocos2d::Layer* _layer;//大地图的layer(大地图和上面的坦克\目标,都在此layer上)
+    cocos2d::Layer* _frontLayer;//前面UI的layer(各种按钮及小地图 和各label均在此layer上)
     Battle(){};
     static Battle _instance;
-    int getCube(Cord cord);
-    int getCubeCost(Cord cord);
-    bool isCubePass(Cord cord);
-    bool isCubeSee(Cord cord);
-    bool pathIsSee(Cord from ,Cord to);
-    bool pathIsPass(Cord from , Cord to);
-    int pathCost(Cord from, Cord to);
+    int getCube(Cord cord);//获取某个地图方格的属性
+    int getCubeCost(Cord cord);//获取某个方格的机动小号
+    bool isCubePass(Cord cord);//获取某个方格是否可以通过
+    bool isCubeSee(Cord cord);//获取某个方格是否透视
+    bool pathIsSee(Cord from ,Cord to);//线路是否透视
+    bool pathIsPass(Cord from , Cord to);//线路是否通过
+    int pathCost(Cord from, Cord to);//计算线路的机动总小号
     bool isSelected = false;
     Cord selectedCord = {0,0};
     Cord redTarget = {0,0};
@@ -321,11 +341,13 @@ private:
     cocos2d::Sprite* blueTargetSp = nullptr;
     cocos2d::Label* statusX[5];
 
+	//计算直线距离
     int distance(Cord from ,Cord to){
         int xx = from.x - to.x;
         int yy = from.y - to.y;
         return sqrt(xx*xx + yy*yy);
     }
+	//距离与攻击命中概率换算
     float distance2chance(int d){
         if (d <= 10) return 0.9f;
         if (d <= 20) return 0.85f;
@@ -341,11 +363,13 @@ private:
         return 0.f;
     }
 
+	//攻击结果类型
     typedef enum {
         DESTROY,
         CANNOT_SHOT,
         CANNOT_MOVE
     } RES;
+
 
     RES resutlGen(int a, int b , int c){
         int r = rand100();
@@ -354,6 +378,7 @@ private:
         return CANNOT_MOVE;
     }
 
+	//计算某个距离攻击的结果
     RES dist2result(int dist){
         if (dist <= 10) return resutlGen(90,5,5);
         if (dist <= 20) return resutlGen(80,10,5);
@@ -366,6 +391,8 @@ private:
         if (dist <= 90) return resutlGen(6,47,5);
         return CANNOT_MOVE;
     }
+
+	//从某坦克到某坦克的射击
     void shot(Cord from ,Cord to){
         CCLOG("shot");
         auto src = getTank(from);
@@ -393,6 +420,7 @@ private:
 
     }
 
+	//是否全部射击完了
     bool allShotted(){
         for (auto tank : blueTeam){
             if (tank->canFire() && !tank->hasFired) return false;
@@ -402,6 +430,7 @@ private:
         }
         return true;
     }
+	//处理攻击点击
     void dealAttack(Cord cord){
         if (isSelected) {
             auto tank = getTank(cord);
@@ -442,6 +471,8 @@ private:
         }
     }
 
+
+	//处理机动的点击
     void dealMove(Cord cord){
 
         if (isSelected) {
@@ -493,5 +524,4 @@ private:
         }
     }
 };
-
-#endif /* defined(__simwar__Battle__) */
+#endif

@@ -28,7 +28,7 @@ private:
         TAG_RESET
     };
 
-    cocos2d::Layer* _battleLayer;
+    cocos2d::Layer* _battleLayer; //大地图所在layer
 
     cocos2d::Sprite* _smallMap; // 小地图
     cocos2d::Sprite* _mainMap; // 大地图

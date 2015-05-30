@@ -1,10 +1,4 @@
-//
-//  Battle.cpp
-//  simwar
-//
-//  Created by chenbingfeng on 15/5/23.
-//
-//
+/* 一些函数的实现 */
 
 #include "Battle.h"
 #include "Map.h"
