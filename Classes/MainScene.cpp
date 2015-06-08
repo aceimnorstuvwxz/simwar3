@@ -84,7 +84,7 @@ bool MainScene::init()
     }
 
     // bgm
-    CocosDenshion::SimpleAudioEngine::getInstance()->playBackgroundMusic("sound/bgm.aac", true);
+    CocosDenshion::SimpleAudioEngine::getInstance()->playBackgroundMusic("sound/bgm.mp3", true);
 
     Size visibleSize = Director::getInstance()->getVisibleSize();
     Vec2 origin = Director::getInstance()->getVisibleOrigin();
