@@ -11,7 +11,7 @@
 #include "MainScene.h"
 #include "Tank.h"
 #include "Msg.h"
-
+#include "SimpleAudioEngine.h"
 
 
 class Battle
@@ -394,6 +394,7 @@ private:
 
 	//从某坦克到某坦克的射击
     void shot(Cord from ,Cord to){
+        CocosDenshion::SimpleAudioEngine::getInstance()->playEffect("sound/tank_shot.mp3");
         CCLOG("shot");
         auto src = getTank(from);
         auto dst = getTank(to);
@@ -466,6 +467,7 @@ private:
                 ){
                     isSelected = true;
                     selectedCord = cord;
+                    CocosDenshion::SimpleAudioEngine::getInstance()->playEffect("sound/tank_select.mp3");
                 }
             }
         }
@@ -486,6 +488,7 @@ private:
                     tank->sprite->runAction(move);
                     tank->smallSprite->setPosition(cord2mallPos(cord));
                     tank->hasMoved = true;
+                    CocosDenshion::SimpleAudioEngine::getInstance()->playEffect("sound/tank_move.mp3");
                     switch (gameState) {
                         case FIRST_MOVING:
                             gameState = FIRST_MOVED;
@@ -506,6 +509,27 @@ private:
                     // same team , can not move
                 } else {
                     // 要移动到敌人的地方，裁决
+                    CocosDenshion::SimpleAudioEngine::getInstance()->playEffect("sound/tank_beenshot.mp3");
+                    if (rand100() > 50){
+                        // 敌人胜。
+                        auto tank = getTank(selectedCord);
+                        tank->state = Tank::ST_DEAD;
+                        tank->cord = {0,0};
+                        tank->sprite->setPosition(cord2pos(tank->cord));
+                        tank->smallSprite->setPosition(cord2mallPos(tank->cord));
+                    } else {
+                        auto tank0 = getTank(cord);
+                        tank0->state = Tank::ST_DEAD;
+
+                        tank0->cord = {0,0};
+                        tank0->sprite->setPosition(cord2pos(tank0->cord));
+                        tank0->smallSprite->setPosition(cord2mallPos(tank0->cord));
+
+                        auto tank2 = getTank(selectedCord);
+                        tank2->cord = cord;
+                        tank2->sprite->setPosition(cord2pos(tank2->cord));
+                        tank2->smallSprite->setPosition(cord2mallPos(tank2->cord));
+                    }
                 }
             }
             isSelected = false;
@@ -519,6 +543,7 @@ private:
                     (gameState == SECOND_MOVING && !isRedFirst && tank->team == Tank::T_RED)){
                     isSelected = true;
                     selectedCord = cord;
+                    CocosDenshion::SimpleAudioEngine::getInstance()->playEffect("sound/tank_select.mp3");
                 }
             }
         }

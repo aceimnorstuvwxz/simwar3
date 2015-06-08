@@ -2,6 +2,7 @@
 #include "Common.h"
 #include "Battle.h"
 #include "Msg.h"
+#include "SimpleAudioEngine.h"
 USING_NS_CC;
 
 Scene* MainScene::createScene()
@@ -43,21 +44,26 @@ void MainScene::touchEvent(Ref *pSender, cocos2d::ui::Widget::TouchEventType typ
     switch (tag) {
         case TAG_CHECK:
             CCLOG("btn check");
+            CocosDenshion::SimpleAudioEngine::getInstance()->playEffect("sound/clk_check.mp3");
             Battle::getInstance()->check();
             break;
         case TAG_MOVE:
             CCLOG("btn move");
+            CocosDenshion::SimpleAudioEngine::getInstance()->playEffect("sound/clk_move.mp3");
             Battle::getInstance()->move();
             break;
         case TAG_ATTACK:
             CCLOG("btn attack");
+            CocosDenshion::SimpleAudioEngine::getInstance()->playEffect("sound/clk_attack.mp3");
             Battle::getInstance()->attack();
             break;
         case TAG_END:
             CCLOG("btn end");
+            CocosDenshion::SimpleAudioEngine::getInstance()->playEffect("sound/clk_end.mp3");
             Battle::getInstance()->end();
             break;
         case TAG_RESET:
+            CocosDenshion::SimpleAudioEngine::getInstance()->playEffect("sound/clk_open.mp3");
             Battle::getInstance()->reset();
             CCLOG("reset");
             break;
@@ -76,7 +82,10 @@ bool MainScene::init()
     {
         return false;
     }
-    
+
+    // bgm
+    CocosDenshion::SimpleAudioEngine::getInstance()->playBackgroundMusic("sound/bgm.aac", true);
+
     Size visibleSize = Director::getInstance()->getVisibleSize();
     Vec2 origin = Director::getInstance()->getVisibleOrigin();
 
