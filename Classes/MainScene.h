@@ -25,7 +25,9 @@ private:
         TAG_MOVE,
         TAG_ATTACK,
         TAG_END,
-        TAG_RESET
+        TAG_RESET,
+        TAG_ATTACK_END,
+        TAG_MOVE_END
     };
 
     cocos2d::Layer* _battleLayer; //大地图所在layer

@@ -162,6 +162,8 @@ bool MainScene::init()
     decorateFunctionButton("btn_attack.png", "btn_attack_p.png", config::btn_x, config::btn_y_2, TAG_ATTACK);
     decorateFunctionButton("btn_end.png", "btn_end_p.png", config::btn_x, config::btn_y_3, TAG_END);
     decorateFunctionButton("btn_reset.png", "btn_reset_p.png", config::btn_x, config::btn_y_m1, TAG_RESET);
+    decorateFunctionButton("btn_move_end.png", "btn_move_end.png", config::btn_x + 120, config::btn_y_1, TAG_MOVE_END);
+    decorateFunctionButton("btn_attack_end.png", "btn_attack_end.png", config::btn_x + 120, config::btn_y_2, TAG_ATTACK_END);
 
 
     _battleLayer = Layer::create();
