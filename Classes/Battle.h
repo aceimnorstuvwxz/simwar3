@@ -203,11 +203,13 @@ public:
                 message("moveing");
                 gameState = FIRST_MOVING;
                 isSelected = false;
+                canTeamMove();
                 break;
             case FIRST_MOVED:
                 message("second_moving");
                 gameState = SECOND_MOVING;
                 isSelected = false;
+                canTeamMove();
                 break;
                 
             default:
@@ -215,19 +217,77 @@ public:
         }
     }
 
+    bool canTeamMoveAst(bool isRed){
+        auto& team = isRed ? redTeam : blueTeam;
+        for (auto& tank : team){
+            if (tank->canMove() ) return true;
+        }
+        return false;
+    }
+
+    //检查某方是否还有可移动单位
+    void canTeamMove(){
+        if (gameState == FIRST_MOVING) {
+            if (!canTeamMoveAst(isRedFirst)){
+                gameState = FIRST_MOVED;
+                message("optinal_attack");
+            }
+        }
+        if (gameState == SECOND_MOVING) {
+            if (!canTeamMoveAst(!isRedFirst)){
+                if (isAllMoved()) {
+                    gameState = WAIT_FIRST_ATTACK_CLICK;
+                    message("to_acctack_first_attack");
+                } else {
+                    gameState = WAIT_FIRST_MOVING_CLICK;
+                    message("click_move");
+                }
+            }
+        }
+    }
+
+    bool camTeamAttackAst(bool isred){
+        auto& team = isred? redTeam : blueTeam;
+        for (auto& tank : team){
+            if (tank->canFire()) return true;
+        }
+        return false;
+    }
+
+    void canTeamAttack(){
+        if (gameState == FIRST_ATTACKING) {
+            if (!camTeamAttackAst(isRedFirst)){
+                gameState = WAIT_SECOND_ATTACK_CLICK;
+                message("wait_second_attack");
+            }
+        }
+        if (gameState == SECOND_ATTACKING){
+            if (!camTeamAttackAst(!isRedFirst)){
+                if (allShotted()) {
+                    gameState = WAIT_END_LOOP_CLICK;
+                    message("end_loop");
+                } else {
+                    gameState = WAIT_ATTACK_CHECK;
+                    message("wait_attack_check");
+                }
+            }
+        }
+    }
+
 	//攻击
     void attack(){
-//        gameState = ATTACK;
         switch (gameState) {
             case WAIT_FIRST_ATTACK_CLICK:
                 gameState = FIRST_ATTACKING;
                 message("first_attacking");
                 isSelected = false;
+                canTeamAttack();
                 break;
             case WAIT_SECOND_ATTACK_CLICK:
                 gameState = SECOND_ATTACKING;
                 message("second_attacking");
                 isSelected = false;
+                canTeamAttack();
                 break;
                 
             default:
@@ -417,6 +477,7 @@ private:
                 default:
                     break;
             }
+            dst->checkState();
         }
 
     }

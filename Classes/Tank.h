@@ -24,6 +24,7 @@ public:
         T_RED
     } TEAM;
 
+    STATE lastState = ST_ALIVE; //上个回合的坦克状态
     STATE state = ST_ALIVE; //坦克状态
     TEAM team = T_RED; //坦克队伍
     bool hasMoved = false; //本回合是否动过
@@ -40,17 +41,30 @@ public:
     }
 
     bool canFire(){
-        return hasFired == false && (state == ST_ALIVE || state == ST_NOMOVE);
+        return hasFired == false && (lastState != ST_DEAD && lastState != ST_NOFIRE && state != ST_DEAD && state != ST_NOFIRE);
     }
 
     bool canMove(){
-        return hasMoved == false && (state == ST_ALIVE || state == ST_NOFIRE);
+        return hasMoved == false && (lastState != ST_DEAD && lastState != ST_NOMOVE && state != ST_DEAD && state != ST_NOMOVE);
     }
 
     void nextCycle(){
         // 进入下一个回合，更新相关状态
         move_points = config::init_move_point;
         hasFired = hasMoved = hasBeenShotted = false;
+        // 状态记录，部分状态需要持续一个回合（NOMOVE, NOFIRE)
+        STATE newNowState = state == ST_DEAD ? ST_DEAD : ST_ALIVE;
+        lastState = state;
+        state = newNowState;
+    }
+
+    void checkState(){
+        // 状态归一化，如果既NOFIRE又NOMOVE则也是DEAD。
+        if (state != ST_DEAD){
+            if ((lastState == ST_NOMOVE || state == ST_NOMOVE) && (lastState == ST_NOFIRE || state == ST_NOFIRE)) {
+                state = ST_DEAD;
+            }
+        }
     }
 };
 
